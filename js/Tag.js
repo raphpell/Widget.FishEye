@@ -48,7 +48,7 @@ Tag.union({
 	fullscreen :function( e, b ){
 		var s = b == undefined ? 'toggle' : ( b ? 'add' : 'delete' )
 		Tag.className( e, 'fullscreen', s )
-		Tag.className( getTags( 'BODY' )[0], 'fullscreen', s )
+		Tag.className( document.getElementsByTagName('BODY')[0], 'fullscreen', s )
 		// e.scrollIntoView() // c'est pas super...
 		},
 	outerHTML :function( e ){

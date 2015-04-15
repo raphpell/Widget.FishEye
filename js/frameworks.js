@@ -38,10 +38,6 @@ each =function( m, f1, aTargetedConstructors, m2 ){
 		}
 	return m
 	}
-getTags =function( s, e ){
-	e=e||document
-	return e.getElementsByTagName(s)
-	}
 isset =function( m ){ return m !== undefined }
 
 Object.prototype.union = function( o, b ){

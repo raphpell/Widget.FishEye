@@ -1,4 +1,4 @@
-FishEye =function( aItems, oSettings ){
+FishEye =function( aItems, oSettings, eParent ){
 	var o = this
 	o.extend([ oSettings?oSettings:{}, FishEye.oDefaultSettings ], true )
 	o.nChange = o.nMax - o.nMin
@@ -32,7 +32,8 @@ FishEye =function( aItems, oSettings ){
 			'mouseover', fLabel( 'show', 'block' ),
 			'mouseout', fLabel( 'hide', 'none' )
 		)
-	getTags( 'BODY' )[0].appendChild( o.tag )
+	if( eParent ) eParent.appendChild( o.tag )
+	else document.getElementsByTagName( 'BODY' )[0].appendChild( o.tag )
 	}
 FishEye.prototype={
 	state: 'visible',
@@ -142,7 +143,7 @@ FishEye.Item =function( aItem ){
 		var f = o.XXX.blink
 		, s = o.sType
 		if( f ) f.call( this, o.nMax, n )
-		else if( in_array( s, [ 'top', 'right', 'bottom', 'left' ])){
+		else if( in_array( s, ['top','right','bottom','left'])){
 			this.style[s] = 0
 			;( new Fx ( this, FishEye.fO( s, o.nMax ), 'circ.out', 500 )).blink( n )
 			}
