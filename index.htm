@@ -1,0 +1,57 @@
+<html>
+<head>
+	<title>&cirscir; FishEye</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	<meta name="Language" content="fr">
+	<meta name="Title" content="FishEye">
+	<link rel="stylesheet" type="text/css" href="css/styles.css">
+</head>
+<body>
+
+<h1>FishEye</h1>
+<p>En cours d'expérimentation... survoler un coté de la page ou appuyer sur <kbd>CTRL</kbd>.</p>
+<div id="eTest" style="padding: 5em;"></div>
+<script type="text/JavaScript" src="js/frameworks.js"></script>
+<script type="text/JavaScript" src="js/Browser.js"></script>
+<script type="text/JavaScript" src="js/Mouse.js"></script>
+<script type="text/JavaScript" src="js/Keyboard.js"></script>
+<script type="text/JavaScript" src="js/Tag.js"></script>
+<script type="text/JavaScript" src="js/Events.js"></script>
+<script type="text/JavaScript" src="js/Style.js"></script>
+<script type="text/JavaScript" src="js/Fx.js"></script>
+<script type="text/JavaScript" src="js/scripts.js"></script>
+
+<script>
+var aItems = [
+	[ 'images/home.png', 'Home', 'index.htm' ],
+	[ 'images/email.png', 'Contact' ],
+	[ 'images/portfolio.png', 'Portfolio' ],
+	[ 'images/music.png', 'Music' ],
+	[ 'images/video.png', 'Video' ],
+	[ 'images/history.png', 'History' ],
+	[ 'images/calendar.png', 'Calendar' ],
+	[ 'images/link.png', 'Links' ],
+	[ 'images/rss.png', 'RSS' ],
+	[ 'images/rss2.png', 'RSS2' ]
+	]
+var oCircle = new FishEye ( aItems, { mItemsEffect:'circ.in', nMax:128, nPow:0.5, nResized:3, sType:'circle' })
+Events.add(
+	document,
+	'keydown',
+	function( evt ){
+		Keyboard.code( evt )
+		if( Keyboard.ctrl )
+			oCircle.tag.style.visibility = "visible"
+		})
+var oTop = new FishEye ( aItems, { sType:'top', aContainerEffect:[ 'bounce.out', 500 ]})
+// oTop.blink( 9 )
+var oLeft = new FishEye ( aItems, { sType:'left', mItemsEffect:'circ.in', nPow:0.5, nMaxDistance:200 })
+var oRight = new FishEye ( aItems, { sType:'right', nMin:20 })
+var oBottom = new FishEye ( aItems, { sType:'bottom', nMax:200, bHide: 0, nMaxDistance:200 })
+/**/
+var oBlock = new FishEye ( aItems, { sType:'block' })
+document.getElementById( 'eTest' ).appendChild( oBlock.tag )
+
+</script>
+</body>
+</html>

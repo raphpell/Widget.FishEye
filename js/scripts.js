@@ -24,9 +24,9 @@ FishEye =function( aItems, oSettings ){
 		}
 	Events.add(
 		window,
-			'load',	call( o, 'reset' ),
-			'resize', call( o, 'reset' ),
-		document, 'mousemove', call( o, FishEye.mousemove ),
+			'load',	CallBack( o, 'reset' ),
+			'resize', CallBack( o, 'reset' ),
+		document, 'mousemove', CallBack( o, FishEye.mousemove ),
 		o.tag,
 			'mousedown', FishEye.mousedown,
 			'mouseover', fLabel( 'show', 'block' ),
