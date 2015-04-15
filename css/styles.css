@@ -1,0 +1,82 @@
+.fisheye {
+	background: blue;
+	line-height: 0;
+	position: fixed;
+	text-align: left;
+	width: 0;
+	}
+.fisheye UL {
+	background: url(../images/dock-bg.gif) repeat 0 top;
+	background: #000;
+	background: rgba(0,0,0,.85);
+	list-style-type: none;
+	list-style-position: outside;
+	margin: 0;
+	padding: 0;
+	position: absolute;
+	text-align: center;
+	white-space: nowrap;
+	}
+	.fisheye LI {
+		margin: 0;
+		padding: 0;
+		position: absolute;
+		}
+	.fisheye .right LI { right:0; }
+	.fisheye .top LI { top:0; }
+	.fisheye .bottom LI { bottom:0; }
+	.fisheye .bottomTest LI { bottom:0; }
+	.fisheye .block LI { bottom:0; }
+		.fisheye IMG {
+			border: none;
+			/* margin: 5px 0 0; */
+			height: auto;
+			position: relative;
+			width: 100%;
+			}
+		.fisheye DIV {
+			display: none;
+			font: bold 12px/12px Arial,Helvetica,sans-serif;
+			position: absolute;
+			padding: 4px 0;
+			width: 100%;
+			}
+		.fisheye DIV SPAN {
+			background: rgba(255,255,255,.85);
+			border-radius: .5em;
+			box-shadow: 0 0 1em rgba(0,0,0,.5);
+			color: #000;
+			padding: 4px 1em;
+			text-decoration: none;
+			}
+
+		.fisheye .top DIV {
+			top: 100%;
+			padding-top: 20px;
+			}
+		.fisheye .bottom DIV {
+			bottom: 100%;
+			padding-bottom: 20px;
+			}
+		.fisheye .left DIV {
+			left: 100%;
+			margin: -20px 0 0 20px;
+			text-align: left;
+			top: 50%;
+			}
+		.fisheye .right DIV {
+			margin: -20px 20px 0 0;
+			right: 100%;
+			text-align: right;
+			top: 50%;
+			}
+		.fisheye .circle DIV {
+			color: #FFF;
+			font: bold 20px/20px Arial,Helvetica,sans-serif;
+			}
+		.fisheye .circle {
+			-moz-border-radius:50%; 
+			-webkit-border-radius:50%;
+			-khtml-border-radius:50%;
+			border-radius:50%;
+			}
