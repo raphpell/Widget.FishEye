@@ -1,7 +1,6 @@
 FishEye =function( aItems, oSettings, eParent ){
 	var o = this
 	o.extend([ oSettings?oSettings:{}, FishEye.oDefaultSettings ], true )
-	o.nChange = o.nMax - o.nMin
 	o.aContainerEffect[0] = Fx.getEffect( o.aContainerEffect[0])
 	o.mItemsEffect = Fx.getEffect( o.mItemsEffect )
 	o.XXX = FishEye.XXX[ o.sType ]
@@ -11,7 +10,8 @@ FishEye =function( aItems, oSettings, eParent ){
 		o.container = Tag( 'UL', { className:o.sType })
 		)
 	o.aItems= []
-	each( aItems, function( aItem ){ o.aItems.push( FishEye.Item.call( o, aItem )) })
+	for(var i=0; aItems[i]; i++)
+		o.aItems.push( FishEye.Item.call( o, aItems[i]))
 	o.XXX.init.call( o )
 	var fLabel =function( sMethod, sDisplay ){
 		return function( evt ){
@@ -49,14 +49,15 @@ FishEye.prototype={
 				var s1 = { H:'left', V:'top' }[ s ]
 				if( o.aDimensions ){
 					var n = 0
-					each( o.aItems, function( eLI, i ){
+					for(var i=0; o.aItems[i]; i++){
+						var eLI = o.aItems[i]
 						var nDim = o.aDimensions[i]
 						eLI.style[s1] = n + 'px'
 						eLI.center = n + nDim/2
 						eLI.style.width = nDim + 'px'
 						eLI.style.zIndex = parseInt( nDim )
 						n += nDim
-						})
+						}
 					}
 				o.cotes = Tag.cotes( o.tag )
 				o.container.style[{ H:'width', V:'height' }[ s ]] = n + 'px'
@@ -90,12 +91,13 @@ FishEye.prototype={
 				var s2 = { H:'left', V:'top' }[ s ]
 				o.container.style[s1] = o.tag.style[s1] = o.nMin + 'px'
 				o.position( o.aItems.length * o.nMin )
-				each( o.aItems, function( eLI, i ){
+				for(var i=0, eLI; o.aItems[i]; i++){
+					eLI = o.aItems[i]
 					eLI.center = o.nMin*(i+0.5)
 					eLI.pos = eLI.center + parseInt( o.container.style[s2])
 					eLI.style[s2] = o.nMin * i + 'px'
 					eLI.style.width = o.nMin + 'px'
-					})
+					}
 				}
 		},
 	hide :function(){
@@ -166,7 +168,7 @@ FishEye.union({
 		var o = this
 		o.cotes = Tag.cotes( o.tag )
 		var oMouse = Mouse.position( evt )
-		, nDistanceScale = o.XXX.scale.call( o, oMouse ) * o.nChange
+		, nDistanceScale = o.XXX.scale.call( o, oMouse ) * ( o.nMax - o.nMin )
 		if( isNaN( nDistanceScale )) return o.reset()
 		o.show()
 		Events.enable( document, 'mousemove', false )
@@ -174,14 +176,13 @@ FishEye.union({
 		o.aDimensions = []
 		var eTargeted
 		, f =function(){
-			// 1. Calculate items distance
-			each( o.aItems, function( eLI, i ){
-				var nDistance = o.distance( oMouse, eLI.pos, i )
-				o.aDistances.push( nDistance )
-				})
-			// 2. Calculate items dimension
 			var nMaxDim = 0, eTargeted
-			each( o.aItems, function( eLI, i ){
+			for(var i=0, eLI; o.aItems[i]; i++){
+				eLI = o.aItems[i]
+			// 1. Calculate items distance
+				var nDistance = o.distance( oMouse, o.aItems[i].pos, i )
+				o.aDistances.push( nDistance )
+			// 2. Calculate items dimension
 				var nCoeff = Math.pow( o.coeff( o.aDistances[i] / o.nMaxDistance ), o.nPow )
 				, nItemScale = 1 - o.mItemsEffect( nCoeff, 0, 1, 1 ).toFixed( 2 )
 				, nDim = o.nMin + nDistanceScale * nItemScale
@@ -190,7 +191,7 @@ FishEye.union({
 					nMaxDim = nDim
 					eTargeted = eLI
 					}
-				})
+				}
 			// 3. Position items & container 
 			o.position( null, eTargeted, oMouse )
 			Events.enable( document, 'mousemove' )

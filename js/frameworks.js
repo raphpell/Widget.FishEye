@@ -1,4 +1,14 @@
-
+_ =function( sId ){
+	var collect =function( s ){
+		if( window[s]) return window[s]
+		return window[s] = getElementById(s)
+		}
+	var args = to_array( arguments ).join( ',').split(',')
+	if( args.length == 1 ) return collect( sId )
+	else for( var i=0, a=[], ni=args.length; i<ni; i++ )
+		a.push( collect( args[i]))
+	return a
+	}
 extend =function( o, m, bPreserve ){
 	if( ! o ) return ;
 	var b = bPreserve || false, s

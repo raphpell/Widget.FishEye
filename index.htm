@@ -1,16 +1,73 @@
-<html>
+ï»¿<html>
 <head>
 	<title>&cirscir; FishEye</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<meta name="Language" content="fr">
 	<meta name="Title" content="FishEye">
 	<link rel="stylesheet" type="text/css" href="css/styles.css">
+	<style>
+		
+	</style>
 </head>
 <body>
 
 <h1>FishEye</h1>
-<p>En cours d'expérimentation... survoler un coté de la page ou appuyer sur <kbd>CTRL</kbd>.</p>
+<p>En cours d'expÃ©rimentation... survoler un cotÃ© de la page ou appuyer sur <kbd>CTRL</kbd>.</p>
 <div id="eTest" style="padding: 5em;"></div>
+
+<ul>
+	<li>
+		<label for="eMenu">Menu</label> : 
+		<select id="eMenu">
+			<option value="oTop">Top</option>
+			<option value="oRight">Right</option>
+			<option value="oBottom">Bottom</option>
+			<option value="oLeft">Left</option>
+			<option value="oBlock">Block</option>
+			<option value="oCircle">Circle</option>
+		</select>
+	</li>
+	<li>
+		<label for="eHide">bHide</label> : 
+		<input id="eHide" type="checkbox">
+	</li>
+	<li>
+		<label for="eMin">nMin</label> : 
+		<input id="eMin" type="text" value="0">
+	</li>
+	<li>
+		<label for="eMax">nMax</label> : 
+		<input id="eMax" type="text" value="0">
+	</li>
+	<li>
+		<label for="ePow">nPow</label> : 
+		<input id="ePow" type="text" value="0">
+	</li>
+	<li>
+		<label for="eMaxDistance">nMaxDistance</label> : 
+		<input id="eMaxDistance" type="text" value="0">
+	</li>
+	<li></li>
+	<li></li>
+</ul>
+
+<!-- 
+<pre>
+&lt;div class="fisheye" style="position:relative; left:50%; height:40px;"&gt;
+	&lt;ul class="block" style="height:40px; width:400px; left:-200px;"&gt;
+		&lt;li style="left:0px; width:40px; z-index:40;"&gt;
+			&lt;div style="display:none;"&gt;&lt;span&gt;Home&lt;/span&gt;&lt;/div&gt;
+			&lt;img src="images/home.png"&gt;
+		&lt;/li&gt;
+		&lt;li style="left:40px; width:40px; z-index:40;"&gt;
+			&lt;div style="display:none;"&gt;&lt;span&gt;Contact&lt;/span&gt;&lt;/div&gt;
+			&lt;img src="images/email.png"&gt;
+		&lt;/li&gt;
+	&lt;/ul&gt;
+&lt;/div&gt;
+</pre>
+-->
+
 <script type="text/JavaScript" src="js/frameworks.js"></script>
 <script type="text/JavaScript" src="js/Browser.js"></script>
 <script type="text/JavaScript" src="js/Mouse.js"></script>
@@ -21,27 +78,50 @@
 <script type="text/JavaScript" src="js/Fx.js"></script>
 <script type="text/JavaScript" src="js/scripts.js"></script>
 
+<!-- creation -->
 <script>
 var aItems = [
-	[ 'images/home.png', 'Home', 'index.htm' ],
-	[ 'images/email.png', 'Contact' ],
-	[ 'images/portfolio.png', 'Portfolio' ],
-	[ 'images/music.png', 'Music' ],
-	[ 'images/video.png', 'Video' ],
-	[ 'images/history.png', 'History' ],
-	[ 'images/calendar.png', 'Calendar' ],
-	[ 'images/link.png', 'Links' ],
-	[ 'images/rss.png', 'RSS' ],
-	[ 'images/rss2.png', 'RSS2' ]
+	['images/home.png','Home','index.htm'],
+	['images/email.png','Contact'],
+	['images/portfolio.png','Portfolio'],
+	['images/music.png','Music'],
+	['images/video.png','Video'],
+	['images/history.png','History'],
+	['images/calendar.png','Calendar'],
+	['images/link.png','Links'],
+	['images/rss.png','RSS'],
+	['images/rss2.png','RSS2']
 	]
-var oTop = new FishEye ( aItems, { sType:'top', aContainerEffect:[ 'bounce.out', 500 ]})
-var oLeft = new FishEye ( aItems, { sType:'left', mItemsEffect:'circ.in', nPow:0.5, nMaxDistance:200 })
-var oRight = new FishEye ( aItems, { sType:'right', nMin:20 })
-var oBottom = new FishEye ( aItems, { sType:'bottom', nMax:200, bHide: 0, nMaxDistance:200 })
-var oBlock = new FishEye ( aItems, { sType:'block' }, document.getElementById( 'eTest' ))
+var oTop = new FishEye( aItems, {
+	sType:'top',
+	aContainerEffect:[ 'bounce.out', 500 ]
+	})
+var oLeft = new FishEye( aItems, {
+	sType:'left',
+	mItemsEffect:'circ.in',
+	nPow:0.5,
+	nMaxDistance:200
+	})
+var oRight = new FishEye( aItems, {
+	sType:'right',
+	nMin:20
+	})
+var oBottom = new FishEye( aItems, {
+	sType:'bottom',
+	nMax:200,
+	bHide:0,
+	nMaxDistance:200
+	})
+var oBlock = new FishEye( aItems, { sType:'block' }, document.getElementById( 'eTest' ))
 // oTop.blink( 9 )
 
-var oCircle = new FishEye ( aItems, { mItemsEffect:'circ.in', nMax:128, nPow:0.5, nResized:3, sType:'circle' })
+var oCircle = new FishEye ( aItems, {
+	mItemsEffect:'circ.in',
+	nMax:128,
+	nPow:0.5,
+	nResized:3,
+	sType:'circle'
+	})
 Events.add(
 	document, 'keydown', function( evt ){
 		Keyboard.code( evt )
@@ -50,5 +130,39 @@ Events.add(
 		}
 	)
 </script>
+<!-- formulaire -->
+<script>
+_('eMenu,eHide,eMin,eMax,ePow,eMaxDistance')
+var oMenu
+Events.add( 'change',
+	eMenu, function(){
+		oMenu = window[ eMenu.value ]
+		eMin.value = oMenu.nMin
+		eMax.value = oMenu.nMax
+		ePow.value = oMenu.nPow
+		eHide.checked = oMenu.bHide
+		eMaxDistance.value = oMenu.nMaxDistance
+		},
+	eHide, function(){
+		oMenu[ oMenu.bHide = eHide.checked ? 'hide' : 'show' ]()
+		},
+	eMin, function(){
+		oMenu.nMin = parseInt( eMin.value )
+		oMenu.state = 'visible'
+		oMenu.reset()
+		},
+	eMax, function(){
+		oMenu.nMax = parseInt( eMax.value )
+		},
+	ePow, function(){
+		oMenu.nPow = 0 + ePow.value
+		},
+	eMaxDistance, function(){
+		oMenu.nMaxDistance = parseInt( eMaxDistance.value )
+		}
+	)
+eMenu.onchange()
+</script>
+
 </body>
 </html>
