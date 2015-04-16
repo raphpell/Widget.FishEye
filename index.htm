@@ -136,13 +136,18 @@ var aItems = [
 	]
 var oTop = new FishEye( aItems, {
 	sType:'top',
+	sItemsEffect:'linear',
+	nMax:128,
+	nMaxDistance:300,
 	sContainerEffect:'bounce.out|1000'
 	})
 var oLeft = new FishEye( aItems, {
 	sType:'left',
-	sItemsEffect:'circ.inOut',
+	sItemsEffect:'expo.in',
 	nPow:0.5,
-	nMaxDistance:200
+	nMin:40,
+	nMax:128,
+	nMaxDistance:50
 	})
 var oRight = new FishEye( aItems, {
 	sType:'right',
