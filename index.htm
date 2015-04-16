@@ -15,6 +15,9 @@
 <h1>FishEye</h1>
 <p>Survoler un coté de la page ou appuyer sur <kbd>CTRL</kbd> pour ouvrir le menu circulaire.</p>
 <p>Expérimental : beaucoup de fichiers externes requis...</p>
+
+Les images sont issues du projet externe : <a href="http://ndesign-studio.com/blog/css-dock-menu">CSS Dock Menu</a>
+
 <div id="eTest" style="padding: 5em;"></div>
 <ul>
 	<li><label for="eMenu">Menu</label> : 
@@ -157,9 +160,10 @@ var oBlock = new FishEye( aItems, { sType:'block' }, document.getElementById( 'e
 
 var oCircle = new FishEye ( aItems, {
 	mItemsEffect:'circ.in',
-	nMax:128,
-	nPow:0.5,
-	nResized:3,
+	nMax:200,
+	nPow:1,
+	nResized:5,
+	nMaxDistance:100,
 	sType:'circle'
 	})
 Events.add(
