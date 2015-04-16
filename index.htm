@@ -6,7 +6,7 @@
 	<meta name="Title" content="FishEye">
 	<link rel="stylesheet" type="text/css" href="css/styles.css">
 	<style>
-		
+		pre { height:2000px; width:2000px; }
 	</style>
 </head>
 <body>
@@ -16,10 +16,8 @@
 <p>Survoler un coté de la page ou appuyer sur <kbd>CTRL</kbd> pour ouvrir le menu circulaire.</p>
 <p>Expérimental : beaucoup de fichiers externes requis...</p>
 <div id="eTest" style="padding: 5em;"></div>
-
 <ul>
-	<li>
-		<label for="eMenu">Menu</label> : 
+	<li><label for="eMenu">Menu</label> : 
 		<select id="eMenu">
 			<option value="oTop">Top</option>
 			<option value="oRight">Right</option>
@@ -29,28 +27,69 @@
 			<option value="oCircle">Circle</option>
 		</select>
 	</li>
-	<li>
-		<label for="eHide">bHide</label> : 
+	<li><label for="eHide">bHide</label> : 
 		<input id="eHide" type="checkbox">
 	</li>
-	<li>
-		<label for="eMin">nMin</label> : 
+	<li><label for="eContainerEffect">sContainerEffect</label> : 
+		"<select id="eContainerEffect">
+			<option value=""></option>
+			<option value="linear">linear</option>
+			<option value="quad">quad</option>
+			<option value="quint">quint</option>
+			<option value="sine">sine</option>
+			<option value="expo">expo</option>
+			<option value="circ">circ</option>
+			<option value="elastic">elastic</option>
+			<option value="back">back</option>
+			<option value="bounce">bounce</option>
+			<option value="bidon">bidon</option>
+		</select>
+		<label for="eContainerEffect2">.</label> 
+		<select id="eContainerEffect2">
+			<option value=""></option>
+			<option value="in">in</option>
+			<option value="out">out</option>
+			<option value="inOut">inOut</option>
+		</select> 
+		<label for="eContainerEffectTime">|</label> 
+		<input id="eContainerEffectTime" type="text" value="0">"
+	</li>
+	<li><label for="eItemsEffect">sItemsEffect</label> : 
+		"<select id="eItemsEffect">
+			<option value=""></option>
+			<option value="linear">linear</option>
+			<option value="quad">quad</option>
+			<option value="quint">quint</option>
+			<option value="sine">sine</option>
+			<option value="expo">expo</option>
+			<option value="circ">circ</option>
+			<option value="elastic">elastic</option>
+			<option value="back">back</option>
+			<option value="bounce">bounce</option>
+			<option value="bidon">bidon</option>
+		</select>.
+		<select id="eItemsEffect2">
+			<option value=""></option>
+			<option value="in">in</option>
+			<option value="out">out</option>
+			<option value="inOut">inOut</option>
+		</select>"
+	</li>
+	<li><label for="eMin">nMin</label> : 
 		<input id="eMin" type="text" value="0">
 	</li>
-	<li>
-		<label for="eMax">nMax</label> : 
+	<li><label for="eMax">nMax</label> : 
 		<input id="eMax" type="text" value="0">
 	</li>
-	<li>
-		<label for="ePow">nPow</label> : 
+	<li><label for="ePow">nPow</label> : 
 		<input id="ePow" type="text" value="0">
 	</li>
-	<li>
-		<label for="eMaxDistance">nMaxDistance</label> : 
+	<li><label for="eMaxDistance">nMaxDistance</label> : 
 		<input id="eMaxDistance" type="text" value="0">
 	</li>
 </ul>
 
+<pre></pre>
 <!-- 
 <pre>
 &lt;div class="fisheye" style="position:relative; left:50%; height:40px;"&gt;
@@ -94,17 +133,17 @@ var aItems = [
 	]
 var oTop = new FishEye( aItems, {
 	sType:'top',
-	aContainerEffect:[ 'bounce.out', 1000 ]
+	sContainerEffect:'bounce.out|1000'
 	})
 var oLeft = new FishEye( aItems, {
 	sType:'left',
-	mItemsEffect:'circ.in',
+	sItemsEffect:'circ.inOut',
 	nPow:0.5,
 	nMaxDistance:200
 	})
 var oRight = new FishEye( aItems, {
 	sType:'right',
-	aContainerEffect:[ 'elastic.out', 500 ],
+	sContainerEffect:'elastic.out|500',
 	nMin:20
 	})
 var oBottom = new FishEye( aItems, {
@@ -134,6 +173,9 @@ Events.add(
 <!-- formulaire -->
 <script>
 _('eMenu,eHide,eMin,eMax,ePow,eMaxDistance')
+_('eItemsEffect,eItemsEffect2')
+_('eContainerEffect,eContainerEffect2,eContainerEffectTime')
+
 var oMenu
 Events.add( 'change',
 	eMenu, function(){
@@ -143,6 +185,14 @@ Events.add( 'change',
 		ePow.value = oMenu.nPow
 		eHide.checked = oMenu.bHide
 		eMaxDistance.value = oMenu.nMaxDistance
+		var a = oMenu.sItemsEffect.split('.')
+		eItemsEffect.value = a[0]
+		eItemsEffect2.value = a[1]
+		var a1 = oMenu.sContainerEffect.split('|')
+		eContainerEffectTime.value = parseInt( a1[1])
+		var a2 = a1[0].split('.')
+		eContainerEffect.value = a2[0]
+		eContainerEffect2.value = a2[1]
 		},
 	eHide, function(){
 		oMenu[ (oMenu.bHide = eHide.checked) ? 'hide' : 'show' ]()
@@ -160,6 +210,24 @@ Events.add( 'change',
 		},
 	eMaxDistance, function(){
 		oMenu.nMaxDistance = parseInt( eMaxDistance.value )
+		},
+	eItemsEffect, function(){
+		oMenu.fItemsEffect = Fx.getEffect( oMenu.sItemsEffect = eItemsEffect.value +'.'+ eItemsEffect2.value )
+		},
+	eItemsEffect2, function(){
+		oMenu.fItemsEffect = Fx.getEffect( oMenu.sItemsEffect = eItemsEffect.value +'.'+ eItemsEffect2.value )
+		},
+	eContainerEffect, function(){
+		oMenu.sContainerEffect = eContainerEffect.value +'.'+ eContainerEffect2.value +'|'+ eContainerEffectTime.value
+		oMenu.aContainerEffect[0] = Fx.getEffect( oMenu.sContainerEffect )
+		},
+	eContainerEffect2, function(){
+		oMenu.sContainerEffect = eContainerEffect.value +'.'+ eContainerEffect2.value +'|'+ eContainerEffectTime.value
+		oMenu.aContainerEffect[0] = Fx.getEffect( oMenu.sContainerEffect )
+		},
+	eContainerEffectTime, function(){
+		oMenu.sContainerEffect = eContainerEffect.value +'.'+ eContainerEffect2.value +'|'+ eContainerEffectTime.value
+		oMenu.aContainerEffect[1] = parseInt( eContainerEffectTime.value )
 		}
 	)
 eMenu.onchange()

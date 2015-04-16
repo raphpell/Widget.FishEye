@@ -49,6 +49,7 @@ Browser.union({
 		return self[ 'inner' + s ] || document.documentElement[ 'client' + s ] || document.body[ 'client' + s ]
 		},
 	scroller :function(){
+		return document.getElementsByTagName('body')[0]
 		return document[ document.documentElement[ 'scrollTop' ] != undefined && ! Browser.isSafari ? 'documentElement' : 'body' ]
 		},
 	scrollAttr :function( s ){

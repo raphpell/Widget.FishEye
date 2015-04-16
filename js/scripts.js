@@ -1,8 +1,9 @@
 FishEye =function( aItems, oSettings, eParent ){
 	var o = this
 	o.extend([ oSettings?oSettings:{}, FishEye.oDefaultSettings ], true )
-	o.aContainerEffect[0] = Fx.getEffect( o.aContainerEffect[0])
-	o.mItemsEffect = Fx.getEffect( o.mItemsEffect )
+	var a = o.sContainerEffect.split('|')
+	o.aContainerEffect = [ Fx.getEffect( a[0]), a[1] ]
+	o.fItemsEffect = Fx.getEffect( o.sItemsEffect )
 	o.XXX = FishEye.XXX[ o.sType ]
 	o.sDirection = o.XXX.direction
 	Tag.interlock(
@@ -103,7 +104,7 @@ FishEye.prototype={
 	hide :function(){
 		var o = this
 		o.state = 'hidden'
-		if( Fx.playing( o.tag )) Fx.stop( o.tag ) // return ;
+		if( Fx.playing( o.tag )) Fx.stop( o.tag )
 		var s = o.sType
 		if( ! o.custom( 'hide' ))
 			if( 'top,right,bottom,left'.indexOf( s ) > -1 )
@@ -161,8 +162,8 @@ FishEye.union({
 		nMax: 100,
 		nMaxDistance: 100,
 		nPow: 1,
-		aContainerEffect: [ 'circ.out', 500 ],
-		mItemsEffect: 'sine.inOut' // linear' //  '
+		sContainerEffect: 'circ.out|500',
+		sItemsEffect: 'sine.inOut' // linear' //  '
 		},
 	mousemove :function( evt ){
 		var o = this
@@ -184,7 +185,7 @@ FishEye.union({
 				o.aDistances.push( nDistance )
 			// 2. Calculate items dimension
 				var nCoeff = Math.pow( o.coeff( o.aDistances[i] / o.nMaxDistance ), o.nPow )
-				, nItemScale = 1 - o.mItemsEffect( nCoeff, 0, 1, 1 ).toFixed( 2 )
+				, nItemScale = 1 - o.fItemsEffect( nCoeff, 0, 1, 1 ).toFixed( 2 )
 				, nDim = o.nMin + nDistanceScale * nItemScale
 				o.aDimensions.push( nDim )
 				if( nMaxDim < nDim ){
@@ -221,9 +222,9 @@ FishEye.union({
 				o.top='50%'
 				},
 			scale :function( oMouse ){
-				var o = this
-				return oMouse.left < o.cotes.left + o.nMin + o.nMax
-					? o.coeff( 1 - ( oMouse.left - o.nMin ) / o.nMax )
+				var o = this, n = oMouse.left - o.cotes.left
+				return n < o.nMin + o.nMax
+					? o.coeff( 1 - ( n - o.nMin ) / o.nMax )
 					: NaN
 				}
 			},
@@ -249,9 +250,9 @@ FishEye.union({
 				o.left='50%'
 				},
 			scale :function( oMouse ){
-				var o = this
-				return oMouse.top < o.cotes.top + o.nMin + o.nMax
-					? o.coeff( 1 - ( oMouse.top - o.nMin ) / o.nMax )
+				var o = this, n = oMouse.top - o.cotes.top
+				return n < o.nMin + o.nMax
+					? o.coeff( 1 - ( n - o.nMin ) / o.nMax )
 					: NaN
 				}
 			},
@@ -284,7 +285,7 @@ FishEye.union({
 				},
 			distance :function( oMouse, mCenter, i ){
 				var o = this
-				if( i == 0 ) o.tmp = oMouse.left - Browser.scrollAttr('Left') - o.cotes.left
+				if( i == 0 ) o.tmp = oMouse.left - o.cotes.left
 				return Math.abs( o.tmp - mCenter )
 				},
 			blink: function( nMax, n ){
@@ -299,10 +300,9 @@ FishEye.union({
 					o.nRadius = o.nMin * o.aItems.length / ( 2 * Math.PI )
 					o.nStart = -Math.PI/2
 					}
-				with( o.tag.style ){
-					top = '50%'
-					left = '50%'
-					}
+				var oS = o.tag.style
+				oS.top = '50%'
+				oS.left = '50%'
 				},
 			hide: function(){
 				this.tag.style.visibility = "hidden"
@@ -319,12 +319,11 @@ FishEye.union({
 						x: x,
 						y: y
 						}
-					with( eLI.style ){
-						left = parseInt( x + o.nRadius ) + 'px'
-						top = parseInt( y + o.nRadius ) + 'px'
-						width = o.nMin + 'px'
-						marginLeft = marginTop = -o.nMin/2 + 'px'
-						}
+					var oS = eLI.style
+					oS.left = parseInt( x + o.nRadius ) + 'px'
+					oS.top = parseInt( y + o.nRadius ) + 'px'
+					oS.width = o.nMin + 'px'
+					oS.marginLeft = oS.marginTop = -o.nMin/2 + 'px'
 					})
 				o.position( o.nRadius*2 )
 				},
@@ -364,13 +363,12 @@ FishEye.union({
 						var n = o.aDimensions[i]
 						, x = parseInt( nRadius + nRadius * Math.cos( aAngles[i]))
 						, y = parseInt( nRadius + nRadius * Math.sin( aAngles[i]))
-						with( eLI.style ){
-							left = x + 'px'
-							top = y + 'px'
-							width = n + 'px'
-							marginLeft = marginTop = -n/2 + 'px'
-							zIndex = parseInt( n )
-							}
+						var oS = eLI.style
+						oS.left = x + 'px'
+						oS.top = y + 'px'
+						oS.width = n + 'px'
+						oS.marginLeft = oS.marginTop = -n/2 + 'px'
+						oS.zIndex = parseInt( n )
 						if( eLI == eTargeted && eTargeted.pos ){
 							var oLabel = eTargeted.firstChild.style 
 							oLabel.width = parseInt( nRadius*2 ) + 'px'
@@ -382,11 +380,10 @@ FishEye.union({
 					n = nRadius*2
 					} else n = o.nRadius*2
 				o.cotes = Tag.cotes( o.tag )
-				with( o.container.style ){
-					left = parseInt( -n/2 + mCenter.x ) + 'px'
-					top = parseInt( -n/2 + mCenter.y  )+ 'px'
-					width = height = n + 'px'
-					}
+				var oS = o.container.style
+				oS.left = parseInt( -n/2 + mCenter.x ) + 'px'
+				oS.top = parseInt( -n/2 + mCenter.y  )+ 'px'
+				oS.width = oS.height = n + 'px'
 				},
 			scale :function( oMouse ){
 				var o = this
