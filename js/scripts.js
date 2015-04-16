@@ -103,7 +103,7 @@ FishEye.prototype={
 	hide :function(){
 		var o = this
 		o.state = 'hidden'
-		if( Fx.playing( o.tag )) return ;
+		if( Fx.playing( o.tag )) Fx.stop( o.tag ) // return ;
 		var s = o.sType
 		if( ! o.custom( 'hide' ))
 			if( 'top,right,bottom,left'.indexOf( s ) > -1 )

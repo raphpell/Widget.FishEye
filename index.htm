@@ -94,7 +94,7 @@ var aItems = [
 	]
 var oTop = new FishEye( aItems, {
 	sType:'top',
-	aContainerEffect:[ 'bounce.out', 500 ]
+	aContainerEffect:[ 'bounce.out', 1000 ]
 	})
 var oLeft = new FishEye( aItems, {
 	sType:'left',
@@ -104,6 +104,7 @@ var oLeft = new FishEye( aItems, {
 	})
 var oRight = new FishEye( aItems, {
 	sType:'right',
+	aContainerEffect:[ 'elastic.out', 500 ],
 	nMin:20
 	})
 var oBottom = new FishEye( aItems, {
