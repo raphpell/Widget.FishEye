@@ -144,7 +144,7 @@ Events.add( 'change',
 		eMaxDistance.value = oMenu.nMaxDistance
 		},
 	eHide, function(){
-		oMenu[ oMenu.bHide = eHide.checked ? 'hide' : 'show' ]()
+		oMenu[ (oMenu.bHide = eHide.checked) ? 'hide' : 'show' ]()
 		},
 	eMin, function(){
 		oMenu.nMin = parseInt( eMin.value )
