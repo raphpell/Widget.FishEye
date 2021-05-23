@@ -13,13 +13,15 @@
 <a href="https://github.com/raphpell/Widget.FishEye">Répertoire du projet</a>
 
 <h1>FishEye</h1>
+<p><b>Expérimental : beaucoup de fichiers externes requis...</b></p>
+
 <p>Survoler un coté de la page ou appuyer sur <kbd>CTRL</kbd> pour ouvrir le menu circulaire.</p>
-<p>Expérimental : beaucoup de fichiers externes requis...</p>
 
-Les images sont issues du projet externe : <a href="http://ndesign-studio.com/blog/css-dock-menu">CSS Dock Menu</a>
+<p>Ce projet dérive du <a href="http://ndesign-studio.com/blog/css-dock-menu">CSS Dock Menu</a> de <cite>n.design studio.</cite></p>
 
-<div id="eTest" style="padding: 5em;"></div>
-<ul>
+
+<div id="eTest"></div>
+<ul style="list-style-type: none;">
 	<li><label for="eMenu">Menu</label> : 
 		<select id="eMenu">
 			<option value="oTop">Top</option>
@@ -78,37 +80,13 @@ Les images sont issues du projet externe : <a href="http://ndesign-studio.com/bl
 			<option value="inOut">inOut</option>
 		</select>"
 	</li>
-	<li><label for="eMin">nMin</label> : 
-		<input id="eMin" type="text" value="0">
-	</li>
-	<li><label for="eMax">nMax</label> : 
-		<input id="eMax" type="text" value="0">
-	</li>
-	<li><label for="ePow">nPow</label> : 
-		<input id="ePow" type="text" value="0">
-	</li>
-	<li><label for="eMaxDistance">nMaxDistance</label> : 
-		<input id="eMaxDistance" type="text" value="0">
-	</li>
+	<li><label for="eMin">nMin</label> : <input id="eMin" type="text" value="0"></li>
+	<li><label for="eMax">nMax</label> : <input id="eMax" type="text" value="0"></li>
+	<li><label for="ePow">nPow</label> : <input id="ePow" type="text" value="0"></li>
+	<li><label for="eMaxDistance">nMaxDistance</label> : <input id="eMaxDistance" type="text" value="0"></li>
 </ul>
 
 <pre></pre>
-<!-- 
-<pre>
-&lt;div class="fisheye" style="position:relative; left:50%; height:40px;"&gt;
-	&lt;ul class="block" style="height:40px; width:400px; left:-200px;"&gt;
-		&lt;li style="left:0px; width:40px; z-index:40;"&gt;
-			&lt;div style="display:none;"&gt;&lt;span&gt;Home&lt;/span&gt;&lt;/div&gt;
-			&lt;img src="images/home.png"&gt;
-		&lt;/li&gt;
-		&lt;li style="left:40px; width:40px; z-index:40;"&gt;
-			&lt;div style="display:none;"&gt;&lt;span&gt;Contact&lt;/span&gt;&lt;/div&gt;
-			&lt;img src="images/email.png"&gt;
-		&lt;/li&gt;
-	&lt;/ul&gt;
-&lt;/div&gt;
-</pre>
--->
 
 <script type="text/JavaScript" src="js/frameworks.js"></script>
 <script type="text/JavaScript" src="js/Browser.js"></script>
@@ -181,6 +159,7 @@ var oBlock = new FishEye( aItems, { sType:'block' }, document.getElementById( 'e
 // oTop.blink( 9 )
 
 </script>
+
 <!-- formulaire -->
 <script>
 _('eMenu,eHide,eMin,eMax,ePow,eMaxDistance')

@@ -1,162 +1,166 @@
-class FishEye {
-	constructor ( aItems, oSettings, eParent ){
+FishEye = (function(){
+	let fO = ( s, m ) => {var o={};o[s]=m;return o}
+	, Item =function( aItem ){
 		var o = this
-		o.state = 'visible'
-		Object.assign( o, FishEye.oDefaultSettings, oSettings?oSettings:{})
-		var a = o.sContainerEffect.split('|')
-		o.aContainerEffect = [ Fx.getEffect( a[0]), a[1] ]
-		o.fItemsEffect = Fx.getEffect( o.sItemsEffect )
-		o.XXX = FishEye.XXX[ o.sType ]
-		o.sDirection = o.XXX.direction
-		Tag.interlock(
-			o.tag = Tag( 'DIV', { className:'fisheye' }),
-			o.container = Tag( 'UL', { className:o.sType })
+		var eLI = Tag( 'LI' ).appendNodes(
+			Tag( 'DIV', { innerHTML: aItem[1] ? '<span>'+ aItem[1] +'</span>' : '' }),
+			Tag( 'IMG', { src:aItem[0] })
 			)
-		o.aItems= []
-		aItems.forEach( a => o.aItems.push( FishEye.Item.call( o, a )))
-		o.XXX.init.call( o )
-		var fLabel =function( sMethod, sDisplay ){
-			return function( evt ){
-				var e = Events.element( evt )
-				if( e.nodeName == 'IMG' ){
-					e = e.previousSibling
-					if( ! o.custom( sMethod+'Label', [e])) e.style.display = sDisplay
-					}
+		if( aItem[2]) eLI.onmousedown = ()=> document.location = aItem[2]
+		eLI.blink =function( n ){
+			var f = o.XXX.blink
+			, s = o.sType
+			if( f ) f.call( this, o.nMax, n )
+			else if( ~'top,right,bottom,left'.indexOf( s )){
+				this.style[s] = 0
+				;( new Fx ( this, fO( s, o.nMax ), 'circ.out', 500 )).blink( n )
 				}
 			}
-		Events.add(
-			window,
-				'load',	CallBack( o, 'reset' ),
-				'resize', CallBack( o, 'reset' ),
-			document, 'mousemove', CallBack( o, FishEye.mousemove ),
-			o.tag,
-				'mousedown', FishEye.mousedown,
-				'mouseover', fLabel( 'show', 'block' ),
-				'mouseout', fLabel( 'hide', 'none' )
-			)
-		if( eParent ) eParent.appendChild( o.tag )
-		else document.getElementsByTagName( 'BODY' )[0].appendChild( o.tag )
+		return o.container.appendChild( eLI )
 		}
 
-	custom  ( s, a ){
-		var f = this.XXX[s]
-		if( f ) return f.apply( this, a ) || true
-		return null
-		}
-	position ( n, eTargeted, oMouse ){
-		var o = this, s = o.sDirection
-		if( ! o.custom( 'position', arguments )){
-			if( 'H,V'.indexOf( s ) > -1 ){
-				var s1 = { H:'left', V:'top' }[ s ]
-				if( o.aDimensions ){
-					var n = 0
-					for(var i=0; o.aItems[i]; i++){
-						var eLI = o.aItems[i]
-						var nDim = o.aDimensions[i]
-						eLI.style[s1] = n + 'px'
-						eLI.center = n + nDim/2
-						eLI.style.width = nDim + 'px'
-						eLI.style.zIndex = parseInt( nDim )
-						n += nDim
+	class FishEye {
+		constructor ( aItems, oSettings, eParent ){
+			var o = this
+			o.state = 'visible'
+			Object.assign( o, FishEye.oDefaultSettings, oSettings?oSettings:{})
+			var a = o.sContainerEffect.split('|')
+			o.aContainerEffect = [ Fx.getEffect( a[0]), a[1] ]
+			o.fItemsEffect = Fx.getEffect( o.sItemsEffect )
+			o.XXX = FishEye.XXX[ o.sType ]
+			o.sDirection = o.XXX.direction
+			Tag.interlock(
+				o.tag = Tag( 'DIV', { className:'fisheye' }),
+				o.container = Tag( 'UL', { className:o.sType })
+				)
+			o.aItems= []
+			aItems.forEach( a => o.aItems.push( Item.call( o, a )))
+			o.XXX.init.call( o )
+			var fLabel =function( sMethod, sDisplay ){
+				return evt => {
+					var e = Events.element( evt )
+					if( e.nodeName == 'IMG' ){
+						e = e.previousSibling
+						if( ! o.custom( sMethod+'Label', [e])) e.style.display = sDisplay
 						}
 					}
-				o.cotes = Tag.cotes( o.tag )
-				o.container.style[{ H:'width', V:'height' }[ s ]] = n + 'px'
-				if( eTargeted ){
-					var x3 = oMouse[s1] - o.cotes[s1]
-					, x1 = eTargeted.pos
-					, y1 = x1 - eTargeted.center
-					, bLeft1 = x3 < x1 ? 1 : 0
-					, eSibling =  eTargeted[ ( bLeft1 ? 'previous' : 'next' ) + 'Sibling' ]
-					if( eSibling ){
-						var f = Fx.Effects.linear
-						, x2 = eSibling.pos
-						, y2 = x2 - eSibling.center
-						, y3 = f( x3-x2, y2, y1-y2, x1-x2 )
-						if( ! isNaN( y3 )) return o.container.style[s1] = parseInt( y3 ) + 'px'
+				}
+			Events.add(
+				window,
+					'load', ()=> o.reset(),
+					'resize', ()=> o.reset(),
+				document, 'mousemove', CallBack( o, FishEye.mousemove ),
+				o.tag,
+					'mousedown', FishEye.mousedown,
+					'mouseover', fLabel( 'show', 'block' ),
+					'mouseout', fLabel( 'hide', 'none' )
+				)
+			if( eParent ) eParent.appendChild( o.tag )
+			else document.getElementsByTagName( 'BODY' )[0].appendChild( o.tag )
+			}
+		custom  ( s, a ){
+			var f = this.XXX[s]
+			if( f ) return f.apply( this, a ) || true
+			return null
+			}
+		position ( n, eTargeted, oMouse ){
+			var o = this, s = o.sDirection
+			if( ! o.custom( 'position', arguments )){
+				if( 'H,V'.indexOf( s ) > -1 ){
+					var s1 = { H:'left', V:'top' }[ s ]
+					if( o.aDimensions ){
+						var n = 0
+						for(var i=0; o.aItems[i]; i++){
+							var eLI = o.aItems[i]
+							var nDim = o.aDimensions[i]
+							eLI.style[s1] = n + 'px'
+							eLI.center = n + nDim/2
+							eLI.style.width = nDim + 'px'
+							eLI.style.zIndex = parseInt( nDim )
+							n += nDim
+							}
 						}
-					return o.container.style[s1] = y1 + 'px'
+					o.cotes = Tag.cotes( o.tag )
+					o.container.style[{ H:'width', V:'height' }[ s ]] = n + 'px'
+					if( eTargeted ){
+						var x3 = oMouse[s1] - o.cotes[s1]
+						, x1 = eTargeted.pos
+						, y1 = x1 - eTargeted.center
+						, bLeft1 = x3 < x1 ? 1 : 0
+						, eSibling =  eTargeted[ ( bLeft1 ? 'previous' : 'next' ) + 'Sibling' ]
+						if( eSibling ){
+							var f = Fx.Effects.linear
+							, x2 = eSibling.pos
+							, y2 = x2 - eSibling.center
+							, y3 = f( x3-x2, y2, y1-y2, x1-x2 )
+							if( ! isNaN( y3 )) return o.container.style[s1] = parseInt( y3 ) + 'px'
+							}
+						return o.container.style[s1] = y1 + 'px'
+						}
+					o.container.style[s1] = parseInt( -n / 2 ) + 'px'
 					}
-				o.container.style[s1] = parseInt( -n / 2 ) + 'px'
+				}
+			}
+		reset (){
+			var o = this, s = o.sDirection
+			if( o.state == 'hidden' ) return ;
+			if( o.bHide ) o.hide()
+			o.aDimensions = null
+			if( ! o.custom( 'reset' ))
+				if( 'H,V'.indexOf( s ) > -1 ){
+					var s1 = { H:'height', V:'width' }[ s ]
+					var s2 = { H:'left', V:'top' }[ s ]
+					o.container.style[s1] = o.tag.style[s1] = o.nMin + 'px'
+					o.position( o.aItems.length * o.nMin )
+					for(var i=0, eLI; o.aItems[i]; i++){
+						eLI = o.aItems[i]
+						eLI.center = o.nMin*(i+0.5)
+						eLI.pos = eLI.center + parseInt( o.container.style[s2])
+						eLI.style[s2] = o.nMin * i + 'px'
+						eLI.style.width = o.nMin + 'px'
+						}
+					}
+			}
+		hide (){
+			var o = this
+			o.state = 'hidden'
+			if( Fx.playing( o.tag )) Fx.stop( o.tag )
+			var s = o.sType
+			if( ! o.custom( 'hide' ))
+				if( ~'top,right,bottom,left'.indexOf( s ))
+					new Fx ( o.tag, fO( s, -o.nMax ), o.aContainerEffect )
+			}
+		show (){
+			var o = this
+			if( o.state == 'visible' ) return ;
+			o.state = 'visible'
+			var s = o.sType
+			if( ! o.custom( 'show' ))
+				if( ~'top,right,bottom,left'.indexOf( s ))
+					new Fx ( o.tag, fO( s, 0 ), o.aContainerEffect )
+			}
+		blink ( nItem, n ){ this.aItems[nItem].blink(n) }
+		coeff ( n ){ return n > 1 ? 1 : ( n < 0 ? 0 : n.toFixed( 3 )) }
+		distance ( oMouse, mCenter, i ){
+			var o = this
+			, n = o.custom( 'distance', arguments )
+			if( n !== null ) return n
+			if( 'left,right'.indexOf( o.sType ) > -1 ){
+				if( i == 0 ) o.tmp = oMouse.top - Browser.scrollAttr( 'top' ) - Browser.viewSize().height/2
+				return Math.abs( o.tmp - mCenter )
+				}
+			if( 'top,bottom'.indexOf( o.sType ) > -1 ){
+				if( i == 0 ) o.tmp = oMouse.left - Browser.scrollAttr( 'left' ) - Browser.viewSize().width/2
+				return Math.abs( o.tmp - mCenter )
 				}
 			}
 		}
-	reset (){
-		var o = this, s = o.sDirection
-		if( o.state == 'hidden' ) return ;
-		if( o.bHide ) o.hide()
-		o.aDimensions = null
-		if( ! o.custom( 'reset' ))
-			if( 'H,V'.indexOf( s ) > -1 ){
-				var s1 = { H:'height', V:'width' }[ s ]
-				var s2 = { H:'left', V:'top' }[ s ]
-				o.container.style[s1] = o.tag.style[s1] = o.nMin + 'px'
-				o.position( o.aItems.length * o.nMin )
-				for(var i=0, eLI; o.aItems[i]; i++){
-					eLI = o.aItems[i]
-					eLI.center = o.nMin*(i+0.5)
-					eLI.pos = eLI.center + parseInt( o.container.style[s2])
-					eLI.style[s2] = o.nMin * i + 'px'
-					eLI.style.width = o.nMin + 'px'
-					}
-				}
-		}
-	hide (){
-		var o = this
-		o.state = 'hidden'
-		if( Fx.playing( o.tag )) Fx.stop( o.tag )
-		var s = o.sType
-		if( ! o.custom( 'hide' ))
-			if( ~'top,right,bottom,left'.indexOf( s ))
-				new Fx ( o.tag, FishEye.fO( s, -o.nMax ), o.aContainerEffect )
-		}
-	show (){
-		var o = this
-		if( o.state == 'visible' ) return ;
-		o.state = 'visible'
-		var s = o.sType
-		if( ! o.custom( 'show' ))
-			if( ~'top,right,bottom,left'.indexOf( s ))
-				new Fx ( o.tag, FishEye.fO( s, 0 ), o.aContainerEffect )
-		}
-	blink ( nItem, n ){ this.aItems[nItem].blink(n) }
-	coeff ( n ){ return n > 1 ? 1 : ( n < 0 ? 0 : n.toFixed( 3 )) }
-	distance ( oMouse, mCenter, i ){
-		var o = this
-		, n = o.custom( 'distance', arguments )
-		if( n !== null ) return n
-		if( 'left,right'.indexOf( o.sType ) > -1 ){
-			if( i == 0 ) o.tmp = oMouse.top - Browser.scrollAttr( 'top' ) - Browser.viewSize().height/2
-			return Math.abs( o.tmp - mCenter )
-			}
-		if( 'top,bottom'.indexOf( o.sType ) > -1 ){
-			if( i == 0 ) o.tmp = oMouse.left - Browser.scrollAttr( 'left' ) - Browser.viewSize().width/2
-			return Math.abs( o.tmp - mCenter )
-			}
-		}
-	}
 
-FishEye.Item =function( aItem ){
-	var o = this
-	var eLI = Tag( 'LI' ).appendNodes(
-		Tag( 'DIV', { innerHTML: aItem[1] ? '<span>'+ aItem[1] +'</span>' : '' }),
-		Tag( 'IMG', { src:aItem[0] })
-		)
-	if( aItem[2]) eLI.onmousedown = ()=> document.location = aItem[2]
-	eLI.blink =function( n ){
-		var f = o.XXX.blink
-		, s = o.sType
-		if( f ) f.call( this, o.nMax, n )
-		else if( ~'top,right,bottom,left'.indexOf( s )){
-			this.style[s] = 0
-			;( new Fx ( this, FishEye.fO( s, o.nMax ), 'circ.out', 500 )).blink( n )
-			}
-		}
-	return o.container.appendChild( eLI )
-	}
+return FishEye
+})()
+
 
 Object.assign( FishEye ,{ 
-	fO :function( s, m ){var o={};o[s]=m;return o},
 	oDefaultSettings:{
 		bHide: true,
 		sType: 'bottom',
@@ -200,12 +204,7 @@ Object.assign( FishEye ,{
 			Events.enable( document, 'mousemove' )
 			o.tmp = null
 			}
-		if( Browser.isIE < 9 ) return f()
 		f()
-		/*
-		o.tmp = f
-		Fx.Interval.push( 50, CallBack( o, 'tmp' )) // Needed for performance
-		*/
 		},
 	mousedown :function( evt ){
 		var e = Events.element( evt )

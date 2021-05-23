@@ -1,13 +1,13 @@
 /*  REQUIS Les classes Color et Style  */
 Fx =function( e, o2, mEffect, nTime, oSettings ){
 	var o = this
-	o.extend([ oSettings?oSettings:{}, Fx.oDefaultSettings ], true )
+	Object.assign( o, Fx.oDefaultSettings, oSettings?oSettings:{})
 	if( o.bPlayNow ) Fx.stop( e )
 	if( mEffect.constructor==Array ){
 		nTime = mEffect[1]
 		mEffect = mEffect[0]
 		}
-	o.extend({
+	Object.assign( o,{
 		aAttr:[],
 		e:e,
 		fFx:Fx.getEffect( mEffect ),
@@ -15,7 +15,7 @@ Fx =function( e, o2, mEffect, nTime, oSettings ){
 		oFrames:{},
 		time: parseInt(nTime) || Fx.time
 		})
-	o.extend({ // Rupture obligatoire
+	Object.assign( o,{ // Rupture obligatoire
 		nFrameTime: parseInt( 1000/o.fps ),
 		nFrames: o.countFrames(),
 		o1: Fx.Last[ ( o.method=='merge' ? 'get_o1' : 'get_o2' )]( e ),
@@ -52,7 +52,7 @@ Fx.prototype.extend({
 			o.onframe( nId, b )
 			for( var j=0, nj=o.aAttr.length, sAttr; j<nj; j++ ){
 				sAttr = o.aAttr[j]
-				if( in_array( sAttr, ['cols','rows'])){
+				if( ~'cols,rows'.indexOf(sAttr)){
 					e[sAttr] = o.oFrames[sAttr][nId] || e[sAttr] 
 					values += ';' // ?
 					} else 
@@ -64,13 +64,13 @@ Fx.prototype.extend({
 			}
 		if( values ){
 			if( Style ) Style.set( e, values )
-			if( ! b ) Fx.Interval.push( o.fps, CallBack( o, 'playFrame' ))
+			if( ! b ) Fx.Interval.push( o.fps, ()=> o.playFrame())
 		}else{
 			o.nId = null
 			if( ! o.oncomplete()) return false
 			if( b ) return o.next ? o.next.playFrame( nId-o.nFrames, true ) : null
 			var oNext = e.bDesc ? o.previous : o.next
-			if( oNext ) Fx.Interval.push( oNext.fps, CallBack( oNext, 'playFrame' ))
+			if( oNext ) Fx.Interval.push( oNext.fps, ()=> oNext.playFrame())
 				else{
 					if( nId == o.nFrames && o.onend ) return o.onend()
 					if( nId < 0 && o.onstart ) return o.onstart()
