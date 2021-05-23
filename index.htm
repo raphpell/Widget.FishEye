@@ -134,6 +134,23 @@ var aItems = [
 	['images/rss.png','RSS'],
 	['images/rss2.png','RSS2']
 	]
+	
+var oCircle = new FishEye ( aItems, {
+	mItemsEffect:'circ.in',
+	nMax:200,
+	nPow:1,
+	nResized:5,
+	nMaxDistance:100,
+	sType:'circle'
+	})
+Events.add(
+	document, 'keydown', function( evt ){
+		Keyboard.code( evt )
+		if( Keyboard.ctrl )
+			oCircle.tag.style.visibility = "visible"
+		}
+	)
+	
 var oTop = new FishEye( aItems, {
 	sType:'top',
 	sItemsEffect:'linear',
@@ -163,21 +180,6 @@ var oBottom = new FishEye( aItems, {
 var oBlock = new FishEye( aItems, { sType:'block' }, document.getElementById( 'eTest' ))
 // oTop.blink( 9 )
 
-var oCircle = new FishEye ( aItems, {
-	mItemsEffect:'circ.in',
-	nMax:200,
-	nPow:1,
-	nResized:5,
-	nMaxDistance:100,
-	sType:'circle'
-	})
-Events.add(
-	document, 'keydown', function( evt ){
-		Keyboard.code( evt )
-		if( Keyboard.ctrl )
-			oCircle.tag.style.visibility = "visible"
-		}
-	)
 </script>
 <!-- formulaire -->
 <script>

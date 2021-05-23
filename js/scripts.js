@@ -1,49 +1,49 @@
-FishEye =function( aItems, oSettings, eParent ){
-	var o = this
-	o.extend([ oSettings?oSettings:{}, FishEye.oDefaultSettings ], true )
-	var a = o.sContainerEffect.split('|')
-	o.aContainerEffect = [ Fx.getEffect( a[0]), a[1] ]
-	o.fItemsEffect = Fx.getEffect( o.sItemsEffect )
-	o.XXX = FishEye.XXX[ o.sType ]
-	o.sDirection = o.XXX.direction
-	Tag.interlock(
-		o.tag = Tag( 'DIV', { className:'fisheye' }),
-		o.container = Tag( 'UL', { className:o.sType })
-		)
-	o.aItems= []
-	for(var i=0; aItems[i]; i++)
-		o.aItems.push( FishEye.Item.call( o, aItems[i]))
-	o.XXX.init.call( o )
-	var fLabel =function( sMethod, sDisplay ){
-		return function( evt ){
-			var e = Events.element( evt )
-			if( e.nodeName == 'IMG' ){
-				e = e.previousSibling
-				if( ! o.custom( sMethod+'Label', [e])) e.style.display = sDisplay
+class FishEye {
+	constructor ( aItems, oSettings, eParent ){
+		var o = this
+		o.state = 'visible'
+		Object.assign( o, FishEye.oDefaultSettings, oSettings?oSettings:{})
+		var a = o.sContainerEffect.split('|')
+		o.aContainerEffect = [ Fx.getEffect( a[0]), a[1] ]
+		o.fItemsEffect = Fx.getEffect( o.sItemsEffect )
+		o.XXX = FishEye.XXX[ o.sType ]
+		o.sDirection = o.XXX.direction
+		Tag.interlock(
+			o.tag = Tag( 'DIV', { className:'fisheye' }),
+			o.container = Tag( 'UL', { className:o.sType })
+			)
+		o.aItems= []
+		aItems.forEach( a => o.aItems.push( FishEye.Item.call( o, a )))
+		o.XXX.init.call( o )
+		var fLabel =function( sMethod, sDisplay ){
+			return function( evt ){
+				var e = Events.element( evt )
+				if( e.nodeName == 'IMG' ){
+					e = e.previousSibling
+					if( ! o.custom( sMethod+'Label', [e])) e.style.display = sDisplay
+					}
 				}
 			}
+		Events.add(
+			window,
+				'load',	CallBack( o, 'reset' ),
+				'resize', CallBack( o, 'reset' ),
+			document, 'mousemove', CallBack( o, FishEye.mousemove ),
+			o.tag,
+				'mousedown', FishEye.mousedown,
+				'mouseover', fLabel( 'show', 'block' ),
+				'mouseout', fLabel( 'hide', 'none' )
+			)
+		if( eParent ) eParent.appendChild( o.tag )
+		else document.getElementsByTagName( 'BODY' )[0].appendChild( o.tag )
 		}
-	Events.add(
-		window,
-			'load',	CallBack( o, 'reset' ),
-			'resize', CallBack( o, 'reset' ),
-		document, 'mousemove', CallBack( o, FishEye.mousemove ),
-		o.tag,
-			'mousedown', FishEye.mousedown,
-			'mouseover', fLabel( 'show', 'block' ),
-			'mouseout', fLabel( 'hide', 'none' )
-		)
-	if( eParent ) eParent.appendChild( o.tag )
-	else document.getElementsByTagName( 'BODY' )[0].appendChild( o.tag )
-	}
-FishEye.prototype={
-	state: 'visible',
-	custom :function( s, a ){
+
+	custom  ( s, a ){
 		var f = this.XXX[s]
 		if( f ) return f.apply( this, a ) || true
 		return null
-		},
-	position :function( n, eTargeted, oMouse ){
+		}
+	position ( n, eTargeted, oMouse ){
 		var o = this, s = o.sDirection
 		if( ! o.custom( 'position', arguments )){
 			if( 'H,V'.indexOf( s ) > -1 ){
@@ -80,8 +80,8 @@ FishEye.prototype={
 				o.container.style[s1] = parseInt( -n / 2 ) + 'px'
 				}
 			}
-		},
-	reset :function(){
+		}
+	reset (){
 		var o = this, s = o.sDirection
 		if( o.state == 'hidden' ) return ;
 		if( o.bHide ) o.hide()
@@ -100,28 +100,28 @@ FishEye.prototype={
 					eLI.style.width = o.nMin + 'px'
 					}
 				}
-		},
-	hide :function(){
+		}
+	hide (){
 		var o = this
 		o.state = 'hidden'
 		if( Fx.playing( o.tag )) Fx.stop( o.tag )
 		var s = o.sType
 		if( ! o.custom( 'hide' ))
-			if( 'top,right,bottom,left'.indexOf( s ) > -1 )
+			if( ~'top,right,bottom,left'.indexOf( s ))
 				new Fx ( o.tag, FishEye.fO( s, -o.nMax ), o.aContainerEffect )
-		},
-	show :function(){
+		}
+	show (){
 		var o = this
 		if( o.state == 'visible' ) return ;
 		o.state = 'visible'
 		var s = o.sType
 		if( ! o.custom( 'show' ))
-			if( 'top,right,bottom,left'.indexOf( s ) > -1 )
+			if( ~'top,right,bottom,left'.indexOf( s ))
 				new Fx ( o.tag, FishEye.fO( s, 0 ), o.aContainerEffect )
-		},
-	blink :function( nItem, n ){ this.aItems[nItem].blink(n) },
-	coeff :function( n ){ return n > 1 ? 1 : ( n < 0 ? 0 : n.toFixed( 3 )) },
-	distance :function( oMouse, mCenter, i ){
+		}
+	blink ( nItem, n ){ this.aItems[nItem].blink(n) }
+	coeff ( n ){ return n > 1 ? 1 : ( n < 0 ? 0 : n.toFixed( 3 )) }
+	distance ( oMouse, mCenter, i ){
 		var o = this
 		, n = o.custom( 'distance', arguments )
 		if( n !== null ) return n
@@ -135,25 +135,27 @@ FishEye.prototype={
 			}
 		}
 	}
+
 FishEye.Item =function( aItem ){
 	var o = this
 	var eLI = Tag( 'LI' ).appendNodes(
 		Tag( 'DIV', { innerHTML: aItem[1] ? '<span>'+ aItem[1] +'</span>' : '' }),
 		Tag( 'IMG', { src:aItem[0] })
 		)
-	if( aItem[2]) Events.add( eLI, 'mousedown', function(){ document.location = aItem[2]})
+	if( aItem[2]) eLI.onmousedown = ()=> document.location = aItem[2]
 	eLI.blink =function( n ){
 		var f = o.XXX.blink
 		, s = o.sType
 		if( f ) f.call( this, o.nMax, n )
-		else if( in_array( s, ['top','right','bottom','left'])){
+		else if( ~'top,right,bottom,left'.indexOf( s )){
 			this.style[s] = 0
 			;( new Fx ( this, FishEye.fO( s, o.nMax ), 'circ.out', 500 )).blink( n )
 			}
 		}
 	return o.container.appendChild( eLI )
 	}
-FishEye.union({ 
+
+Object.assign( FishEye ,{ 
 	fO :function( s, m ){var o={};o[s]=m;return o},
 	oDefaultSettings:{
 		bHide: true,
@@ -304,13 +306,12 @@ FishEye.union({
 				oS.top = '50%'
 				oS.left = '50%'
 				},
-			hide: function(){
-				this.tag.style.visibility = "hidden"
-				},
+			hide: function(){ this.tag.style.visibility = "hidden" },
 			reset: function(){
 				var o = this
 				, nItemAngle = 2*Math.PI/o.aItems.length
-				each( o.aItems, function( eLI, i ){
+				, i = 0
+				o.aItems.forEach( eLI => {
 					var nAngle = nItemAngle * i + o.nStart
 					, x = o.nRadius * Math.cos( nAngle )
 					, y = o.nRadius * Math.sin( nAngle )
@@ -324,6 +325,7 @@ FishEye.union({
 					oS.top = parseInt( y + o.nRadius ) + 'px'
 					oS.width = o.nMin + 'px'
 					oS.marginLeft = oS.marginTop = -o.nMin/2 + 'px'
+					i++
 					})
 				o.position( o.nRadius*2 )
 				},
@@ -332,7 +334,7 @@ FishEye.union({
 				, mCenter = { x:0, y:0 }
 				if( o.aDimensions ){
 					var nPerimeter = 0
-					each( o.aDimensions, function( n ){ nPerimeter += n })
+					o.aDimensions.forEach( n => nPerimeter += n )
 					var nRadius = nPerimeter / ( 2 * Math.PI )
 					, t = Math.atan2( o._top, o._left )
 					, nAngle = o.nStart
@@ -341,7 +343,8 @@ FishEye.union({
 						x: o.nRadius*Math.cos( t ) - nRadius*Math.cos( t ),
 						y: o.nRadius*Math.sin( t ) - nRadius*Math.sin( t )
 						}
-					each( o.aItems, function( eLI, i ){
+					var i = 0
+					o.aItems.forEach( eLI => {
 						var nAlpha1 = o.aDimensions[i]/( nRadius*2 )
 						var nAlpha2 = o.nMin/( o.nRadius*2)
 						aAngles.push( nAngle )
@@ -358,8 +361,10 @@ FishEye.union({
 							nAngle -= nBaseAngle	
 							}
 						nAngle = nAngle + nAlpha1 + o.aDimensions[i+1]/(nRadius*2)
+						i++
 						})
-					each( o.aItems, function( eLI, i ){
+					i = 0
+					o.aItems.forEach( eLI => {
 						var n = o.aDimensions[i]
 						, x = parseInt( nRadius + nRadius * Math.cos( aAngles[i]))
 						, y = parseInt( nRadius + nRadius * Math.sin( aAngles[i]))
@@ -376,6 +381,7 @@ FishEye.union({
 							oLabel.left = -x + parseInt( n/2 ) + 'px'  
 							oLabel.top = -y + parseInt( n/2 ) + 'px'
 							}
+						i++
 						})
 					n = nRadius*2
 					} else n = o.nRadius*2

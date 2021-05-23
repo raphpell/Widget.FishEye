@@ -1,8 +1,8 @@
 Tag = function( s, o ){
 	var b = s.nodeName 
 	, e = b ? s : document.createElement( s )
-	if( o ) extend( e, o )
-	extend( e, Tag.prototype )
+	if( o ) Object.assign( e, o )
+	Object.assign( e, Tag.prototype )
 	return e
 	}
 Tag.prototype.union({
@@ -136,11 +136,6 @@ Tag.union({
 			box = e.getBoundingClientRect()
 			var scroll =  Browser.scrollAttr()
 			, o = { left: box.left + scroll.left , top: box.top + scroll.top }
-				// TEST TEST Navigation & ColorPicker
-				if( window.parent == window && Browser.isIE ){
-					o.left -= 2
-					o.top -= 2
-					}
 			return o
 			}
 		else if( document.getBoxObjectFor ){ // gecko

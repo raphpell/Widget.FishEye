@@ -4,6 +4,7 @@
 	position: fixed;
 	text-align: left;
 	width: 0;
+	z-index: 1;
 	}
 .fisheye UL {
 	background: url(../images/dock-bg.gif) repeat 0 top;
@@ -79,8 +80,5 @@
 			font: bold 20px/20px Arial,Helvetica,sans-serif;
 			}
 		.fisheye .circle {
-			-moz-border-radius:50%; 
-			-webkit-border-radius:50%;
-			-khtml-border-radius:50%;
 			border-radius:50%;
 			}

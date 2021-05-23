@@ -1,41 +1,4 @@
 Events ={
-	/*
-	add :function(){
-		var addEvent =function( e, s1, f1 ){
-			if( ! e || ! s1 || ! f1 ) return false ;
-			var f=function(e,s1,f1){
-				if(e.attachEvent)return e.attachEvent('on'+s1,f1)
-				if(e.addEventListener)return e.addEventListener(s1,f1,false)
-				}
-			if(s1=='mousewheel'&&window.addEventListener)return f(e,'DOMMouseScroll',f1)
-			e['on'+s1]=function(evt){
-				if( e['on'+s1].bDisabled ) return null
-				var evt=Events.get(evt),m,f,a=this.aEvents
-				if(a)for(var i=0,ni=a.length;i<ni;i++)
-					if(a[i]&&(a[i][0]==s1)){
-						f=a[i][1] // needed...
-						m=f( evt )
-						if( evt && evt.cancelBubble ) return null
-						}
-				return m
-				}
-			e.aEvents=e.aEvents||[]
-			return e.aEvents.push([s1,f1])-1
-			}
-		var aId=[], n=arguments.length, e=null, s=null, f=null
-		for(var i = 0; i < n; i++ ){
-			var m = arguments[i]
-			if( ! m ) e = null
-				else switch( m.constructor ){
-						case String: s=m; f=null; break;
-						case Function: f=m; break;
-						default: e=m; f=null; break;
-						}
-			if( e && s && f ) aId.push( addEvent( e, s, f ))
-			}
-		return aId
-		},
-	*/
 	remove :function(){
 		var nj = arguments.length, e = null
 		,removeEvent =function( e, n ){
@@ -153,48 +116,9 @@ Events ={
 			}
 		return aId
 		}
-	/*
-	,remove :function(){
-		var n = arguments.length , e = null
-		,removeEvent =function( e , ni ){
-			if( e.aEvents && e.aEvents[ ni ]) e.aEvents[ ni ] = null
-			return null
-			}
-		,purge =function( m ){
-			if( m && m.aEvents ){
-				for( var a = [], i = 0 , ni = m.aEvents.length ; i < ni ; i++ )
-					if( m.aEvents[i])
-						a.push( m.aEvents[i])
-				m.aEvents = a.length ? a : undefined
-				}
-			}
-		for( var j = 0 ; j < n ; j++ ){
-			var m = arguments[j]
-			if( ! m && m != 0 ) e = null // throw new Error ( "removeEvents : the argument " + j + "/" + n + " is undefined." )
-			if( e && in_array( m.constructor , [ Array , Number ])){
-				m = to_array( m )
-				for( var i = 0 , ni = m.length ; i < ni ; i++ ) removeEvent( e , m[i])
-				purge( e )
-				} else e = m
-			}
-		return null
-		}
-	*/
 	}
 
 call =function( o, m ){
 	var f = CallBack.apply( window, arguments )
 	return function( evt ){ return f(Events.get(evt))}
 	}
-/* 
-call =function( o1, s1 ){
-	var a1 = to_array( arguments ) , a = [0]
-	for( var i = 2 , ni = a1.length ; i < ni ; i++ )
-		a.push( a1[ i ])
-	var f1 =function( evt ){
-		a[0]=Events.get( evt )
-		if( o1[ s1 ]) return o1[ s1 ].apply( o1 , a )
-		}
-	return f1
-	}
-	 */
